@@ -1,0 +1,142 @@
+%!TEX TS-program = xelatex
+%!TEX encoding = UTF-8 Unicode
+
+\documentclass[12pt,a4paper,oneside]{report}
+\usepackage{ntou-thesis}  % 已內含：fontspec, xeCJK, indentfirst, graphicx, hyperref 等
+\usepackage{eso-pic}
+\usepackage{graphicx}
+\usepackage{color}
+
+%% ── 額外套件（ntou-thesis.sty 未載入者）──────────────────────────────────
+\usepackage{rotating}    % sidewaystable / sidewaysfigure
+\usepackage{multirow}    % 表格合併列
+\usepackage{tabularx}    % 自動欄寬表格
+\usepackage{pdfpages}    % \includepdf（書背用）
+\usepackage{enumitem} % 用於精準控制條列式（研究目的）的間距
+\usepackage{tikz}     % 【關鍵優化】用於直接在 LaTeX 內繪製高畫質流程圖
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning,arrows.meta}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+%% ── XeTeX 中文斷行設定 ───────────────────────────────────────────────────
+\XeTeXlinebreaklocale "zh"
+\XeTeXlinebreakskip = 0pt plus 1pt
+\tracinglostchars=0      % 抑制字元遺失警告
+
+%% ── 垂直 CJK（書背旋轉字型）────────────────────────────────────────────
+%% 僅在書背使用；若改由獨立 bookspine.tex 處理可移除此段。
+\newCJKfontfamily{\vCJKFamily}[%
+  Vertical    = RotatedGlyphs,
+  RawFeature  = vertical%
+]{NotoSerifTC-Regular}
+\def\vCJKShiftSymbol#1{\raise.35em\hbox{#1}}
+\def\vCJKBL{%
+  \let\CJKsymbol\vCJKShiftSymbol
+  \let\CJKpunctsymbol\vCJKShiftSymbol
+}
+\def\vCJK#1{\vCJKBL\vCJKFamily\rotatebox{270}{#1}}
+
+%% ── 論文元資料（所有欄位集中於此）──────────────────────────────────────
+\NTOUSetup{
+  mainfont      = {Times New Roman},
+  department    = {航運管理學系},
+  departmenten  = {Department of Shipping and Transportation Management},
+  collegeen     = {College of Maritime Science and Management},
+  degreezh      = {碩士},
+  degreeen      = {Master of Science},
+  titlezh       = {論文名稱},
+  titleen       = {Thesis English Title},
+  studentzh     = {學生姓名},
+  studenten     = {Student Name},
+  advisorzh     = {指導教授姓名 教授},
+  advisoren     = {指導教授英文姓名},
+  rocdate       = {中華民國 115 年 6 月},
+  endate        = {June 2026},
+  spineyear     = {2026},
+  logofile      = {ntou-logo.pdf},
+}
+
+ 
+
+\AtBeginDocument{%
+  \setlength{\parskip}{1\baselineskip}%
+}
+\setcounter{secnumdepth}{3}
+
+\begin{document}
+
+%% ── 封面 ────────────────────────────────────────────────────────────────
+\makeNTOUCover
+
+%% ── 書背（獨立 PDF，由 bookspine.tex 編譯後匯入）────────────────────────
+\clearpage
+\thispagestyle{empty}
+\includepdf{bookspine.pdf}
+\clearpage
+
+%% ── 書名頁 ──────────────────────────────────────────────────────────────
+% --- 在想要加浮水印的該頁開頭插入以下程式碼 ---
+% --- 在想要加浮水印的該頁開頭插入以下程式碼 ---
+\AddToShipoutPicture*{
+    \AtPageCenter{
+        \makebox[0pt]{
+            % 使用 \raisebox 將圖片向下偏移自身高度的一半，達成完美的垂直置中
+            \raisebox{-0.5\height}{
+                % opacity=0.1 代表透明度 10%（需要配合 graphicx 支援，或者圖片本身就是淡色）
+                % 如果圖片太深，建議先用影像軟體將校徽透明度調淡
+                \includegraphics[width=0.9\textwidth]{Watermark_JPG.jpg} 
+            }
+        }
+    }
+}
+% ---------------------------------------------
+% ---------------------------------------------
+\makeNTOUTitlePage
+
+%% ── 學位考試及格證明書 ──────────────────────────────────────────────────
+\makeNTOUCertificate
+
+%% ── 前頁（Roman 頁碼）──────────────────────────────────────────────────
+\NTOUFrontMatter
+
+\begin{NTOUAbstractZH}
+本論文請於此撰寫中文摘要。摘要內容應包含論述重點、方法或程序、結果與討論及結論。
+\NTOUKeywordsZH{○○○○、○○○○、○○○○、○○○○、○○○○}
+\end{NTOUAbstractZH}
+
+\begin{NTOUAbstractEN}
+The purpose of this thesis is to provide a concise summary of the research background,
+methods, findings, discussion, and conclusion.
+\NTOUKeywordsEN{keyword 1, keyword 2, keyword 3, keyword 4, keyword 5}
+\end{NTOUAbstractEN}
+
+\clearpage\tableofcontents
+\clearpage\listoffigures
+\clearpage\listoftables
+%% 若有詞彙表可取消下列兩行的注釋：
+%\ntouFrontTitle{詞彙或特殊符號說明}
+%TFN：Triangular Fuzzy Number，三角模糊數\par
+
+%% ── 正文（Arabic 頁碼）─────────────────────────────────────────────────
+\NTOUMainMatter
+
+\chapter{Chapter 1}
+
+\chapter{Chapter 2}
+
+\chapter{Chapter 3}
+
+\chapter{Chapter 4}
+
+\chapter{Concluding remarks}
+請於此撰寫結論與建議。
+
+%% ── 參考文獻 ────────────────────────────────────────────────────────────
+\NTOUReferences
+作者（年份）。文獻名稱。期刊名稱，卷（期），頁碼。
+
+%% ── 附錄 ────────────────────────────────────────────────────────────────
+\NTOUAppendix
+請於此放置問卷、補充表格或其他附錄資料。
+
+\end{document}

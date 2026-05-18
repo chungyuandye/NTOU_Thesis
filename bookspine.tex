@@ -1,0 +1,131 @@
+%!TEX TS-program = xelatex
+%!TEX encoding = UTF-8 Unicode
+%%
+%% bookspine.tex — 書背（獨立編譯，輸出 bookspine.pdf 後由主文件 \includepdf 匯入）
+%%
+%% 編譯：xelatex bookspine.tex
+%% ════════════════════════════════════════════════════════════════════════
+%%  ① 只需修改下方設定區，每個字以「\\ \vfill」或「\\」分隔
+%% ════════════════════════════════════════════════════════════════════════
+
+%% -- 系所（左欄）：每字以「\\ \vfill」分隔，依實際字數增減 ----------------
+\def\bsDeptChars {%
+  航 \\ \vfill
+  運 \\ \vfill
+  管 \\ \vfill
+  理 \\ \vfill
+  學 \\ \vfill
+  系%
+}
+\def\bsDeptColH{5.5cm}  %% 欄高：字數 × 約 0.9cm（6字→5.5, 8字→7cm）
+
+%% -- 學校（右欄）：固定 8 字，一般不需更動 ---------------------------------
+\def\bsUnivChars {%
+  國 \\ \vfill
+  立 \\ \vfill
+  臺 \\ \vfill
+  灣 \\ \vfill
+  海 \\ \vfill
+  洋 \\ \vfill
+  大 \\ \vfill
+  學%
+}
+\def\bsUnivColH{5.5cm}  %% 欄高：8字 × 約 0.9cm
+
+%% -- 其餘各欄：每字以「\\」分隔 --------------------------------------------
+\def\bsYear    {2026}                      %% 畢業年份（西元）
+\def\bsDegreeV {碩\\士\\學\\位\\論\\文}    %% 學位論文
+\def\bsTitleV  {\\數\\理\\統\\計\\數\\理\\統\\計\\數\\理\\統\\計\\數\\理\\統\\計\\數\\理\\統\\計} %% 論文題目（換成實際題目）
+\def\bsAuthorV {戴\\忠\\淵}                %% 研究生姓名
+
+%% ════════════════════════════════════════════════════════════════════════
+%%  ② 以下排版程式碼無需更動
+%% ════════════════════════════════════════════════════════════════════════
+\documentclass[a4paper,12pt]{article}
+
+\usepackage{xparse}
+\usepackage{fontspec}
+\usepackage[slantfont,boldfont]{xeCJK}
+\usepackage{graphicx}
+\usepackage[a4paper,margin=1cm]{geometry}
+
+%% CJK 字型（fonts/ 目錄優先，否則系統字型）
+\IfFileExists{cwTeX Q Kai Medium.ttf}{%
+  \setCJKmainfont{cwTeX Q Kai Medium.ttf}[
+    Path          = ./,
+    Script        = Default,
+    BoldFont      = cwTeX Q Kai Medium.ttf,
+    ItalicFont    = cwTeX Q Kai Medium.ttf,
+    AutoFakeBold  = 2,
+    AutoFakeSlant = 0.2
+  ]
+}{\IfFileExists{fonts/NotoSansTC-Bold.ttf}{%
+  \setCJKmainfont{NotoSerifTC-Regular}[
+    Path=fonts/, Extension=.ttf,
+    UprightFont=*, BoldFont=NotoSerifTC-Bold,
+    ItalicFont=*, AutoFakeSlant=0.2
+  ]
+}{%
+  \setCJKmainfont{Noto Serif CJK TC}[
+    BoldFont      = Noto Serif CJK TC Bold,
+    ItalicFont    = Noto Serif CJK TC,
+    AutoFakeSlant = 0.2
+  ]
+}}
+
+%% \vtext{字\\字\\字} — 垂直堆疊文字
+\newcommand{\vtext}[1]{%
+  \begin{tabular}[c]{@{}c@{}}#1\end{tabular}%
+}
+
+%% ════════════════════════════════════════════════════════════════════════
+\begin{document}
+\thispagestyle{empty}
+
+\begin{center}
+  \setlength{\fboxsep}{0pt}    % 外框貼合書背寬度
+  \setlength{\fboxrule}{0.6pt} % 外框粗細
+
+  \framebox{%
+    \begin{minipage}[c][270mm]{20mm}
+      \centering
+      \vspace*{0.8cm}
+
+      %% ── 1. 系所（左）× 學校（右）──────────────────────────────────
+      %% minipage [t]=頂對齊  [高度]  [s]=垂直撐滿（vfill 均分字距）
+      \begin{tabular}{@{}c@{\hspace{0.2cm}}c@{}}
+        \begin{minipage}[t][\bsDeptColH][s]{1.1em}
+          \centering\bsDeptChars
+        \end{minipage}
+        &
+        \begin{minipage}[t][\bsUnivColH][s]{1.1em}
+          \centering\bsUnivChars
+        \end{minipage}
+      \end{tabular}
+
+      \vfill
+
+      %% ── 2. 畢業年份（數字橫排，「年」置下）───────────────────────
+      \vtext{\bsYear\\年}
+
+      \vfill
+
+      %% ── 3. 學位論文 ──────────────────────────────────────────────
+      \vtext{\bsDegreeV}
+
+      \vfill
+
+      %% ── 4. 論文題目 ──────────────────────────────────────────────
+      \vtext{\bsTitleV}
+
+      \vfill
+
+      %% ── 5. 研究生姓名 撰 ─────────────────────────────────────────
+      \vtext{\bsAuthorV\\撰}
+
+      \vspace*{0.8cm}
+    \end{minipage}%
+  }
+\end{center}
+
+\end{document}
