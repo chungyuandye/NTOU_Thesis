@@ -46,8 +46,8 @@
   degreeen      = {Master of Science},
   titlezh       = {論文名稱},
   titleen       = {Thesis English Title},
-  studentzh     = {學生姓名},
-  studenten     = {Student Name},
+  studentzh     = {ABC},
+  studenten     = {ABC},
   advisorzh     = {指導教授姓名 教授},
   advisoren     = {指導教授英文姓名},
   rocdate       = {中華民國 115 年 6 月},
@@ -96,9 +96,21 @@
 %% ── 學位考試及格證明書 ──────────────────────────────────────────────────
 \makeNTOUCertificate
 
+%% ── 誌謝辭 
+\pagestyle{empty}
+\begin{NTOUAcknowldegeZH}
+首先我要感謝我的指導老師對論文提出了許多寶貴意見，如果不是他，這篇論文可能早就寫完了。同時也感謝我自己，為了能夠畢業，都一把年紀了這麼努力熬夜寫程式。如果你不逼自己一把，永遠不知道自己有多牛。
+
+\hfill \ntouUniversity \ntouDepartment
+
+\hfill \ntouStudentZH
+
+\hfill \ntouROCDate
+
+\end{NTOUAcknowldegeZH}
+
 %% ── 前頁（Roman 頁碼）──────────────────────────────────────────────────
 \NTOUFrontMatter
-
 \begin{NTOUAbstractZH}
 本論文請於此撰寫中文摘要。摘要內容應包含論述重點、方法或程序、結果與討論及結論。
 \NTOUKeywordsZH{○○○○、○○○○、○○○○、○○○○、○○○○}
