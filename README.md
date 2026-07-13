@@ -179,7 +179,7 @@ A：請確認使用 XeLaTeX 編譯，不支援 pdfLaTeX。
 A：請先單獨執行 `xelatex bookspine.tex`，確認 `bookspine.pdf` 存在後再編譯主文件。
 
 **Q：封面校徽或浮水印不顯示？**  
-A：確認 `ntou-logo.pdf` 與 `Watermark_JPG.jpg` 已放置於專案根目錄，且 `\NTOUSetup` 中的 `logofile` 欄位正確。
+A：確認 `Watermark_JPG.jpg` 已放置於專案根目錄，且 `\NTOUSetup` 中的 `logofile` 欄位正確。
 
 **Q：中文字型顯示異常？**  
 A：請依 [字型說明](#字型說明) 確認字型路徑。Overleaf 用戶建議使用 `fonts/` 目錄方式。
