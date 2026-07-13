@@ -15,13 +15,12 @@
 \usepackage{pdfpages}    % \includepdf（書背用）
 \usepackage{enumitem} % 用於精準控制條列式（研究目的）的間距
 \usepackage{tikz}     % 【關鍵優化】用於直接在 LaTeX 內繪製高畫質流程圖
-\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, chains}
 
 \usepackage{silence}
 \WarningFilter{latex}{Text page}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
-\captionsetup[table]{labelsep=space} % 將表格編號與標題之間改成「一個半形空白」，去掉冒號
 
 %% ── XeTeX 中文斷行設定 ───────────────────────────────────────────────────
 \XeTeXlinebreaklocale "zh"
@@ -105,6 +104,7 @@
 
 \begin{NTOUAcknowledge}
 \thispagestyle{empty}
+
 首先我要感謝我的指導老師對論文提出了許多寶貴意見，如果不是他，這篇論文可能早就寫完了。
 同時也感謝我自己，為了能夠畢業，都一把年紀了這麼努力熬夜寫程式。如果你不逼自己一把，永遠不知道自己有多牛。
 \end{NTOUAcknowledge}

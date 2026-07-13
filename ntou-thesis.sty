@@ -125,10 +125,20 @@
 }
 
 % 3. 英文與數字主字體設定
-\setmainfont{times.ttf}[
-    AutoFakeBold = true,
-    AutoFakeSlant = true
-]
+\newcommand{\ntouSetMainFont}[1]{%
+  \IfFontExistsTF{#1}{%
+    \setmainfont{#1}[
+      AutoFakeBold = true,
+      AutoFakeSlant = true
+    ]%
+  }{%
+    \setmainfont{TeX Gyre Termes}[
+      AutoFakeBold = true,
+      AutoFakeSlant = true
+    ]%
+  }%
+}
+\ntouSetMainFont{Times New Roman}
 % ====================================================================
 
 %\setCJKmainfont{edukai-5.1_20251208.ttf}
@@ -136,7 +146,7 @@
 %% Document-level defaults
 %% ----------------------------------------------------------------
 \AtBeginDocument{%
-  \setmainfont{\ntoumainfont}%
+  \ntouSetMainFont{\ntoumainfont}%
   \singlespacing
   \setlength{\parindent}{2em}%
   \setlength{\parskip}{0pt}%
@@ -342,7 +352,7 @@
 
 % 定義海大專用致謝環境
 \newenvironment{NTOUAcknowledge}{
-  \cellarage
+  \clearpage
 %  \addcontentsline{toc}{chapter}{謝辭} % 加入目錄
   \chapter*{謝辭} % 產生無編號標題
 }{
