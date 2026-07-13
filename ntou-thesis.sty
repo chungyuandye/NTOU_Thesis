@@ -7,7 +7,7 @@
 
 \RequirePackage{iftex}
 \ifXeTeX\else
-  \PackageError{ntou-thesis}{This package requires XeLaTeX}{Compile with XeLaTeX so that Chinese fonts and xeCJK work correctly.}
+\PackageError{ntou-thesis}{This package requires XeLaTeX}{Compile with XeLaTeX so that Chinese fonts and xeCJK work correctly.}
 \fi
 
 %% ----------------------------------------------------------------
@@ -33,70 +33,107 @@
 \RequirePackage{hyperref}
 \RequirePackage{xkeyval}
 \RequirePackage{setspace}
+\RequirePackage{eso-pic}
+\RequirePackage{float}
+\ExplSyntaxOn
+\msg_redirect_name:nnn { fontspec } { script-not-exist } { none }
+\ExplSyntaxOff
 
-%% ----------------------------------------------------------------
-%% CJK fonts
-%% Priority A: fonts/ subfolder (portable, no system install needed).
-%% Priority B: system-installed fonts (fallback).
-%% ----------------------------------------------------------------
-\IfFileExists{cwTeX Q Kai Medium.ttf}{%
-  \setCJKmainfont{cwTeX Q Kai Medium.ttf}[
+% ----------------------------------------------------------------
+% CJK fonts
+% ----------------------------------------------------------------
+% ==================== 中英文字體最高權限完美設定 ====================
+
+% 1. 優先處理教育部標準楷書（中文）與指定參數
+\IfFileExists{edukai-5.1_20251208.ttf}{%
+  \setCJKmainfont{edukai-5.1_20251208.ttf}[
     Path          = ./,
     Script        = Default,
-    BoldFont      = cwTeX Q Kai Medium.ttf,
-    ItalicFont    = cwTeX Q Kai Medium.ttf,
-    AutoFakeBold  = 2,
+    BoldFont      = edukai-5.1_20251208.ttf,
+    ItalicFont    = edukai-5.1_20251208.ttf,
+    AutoFakeBold  = 2.5,  % 強制中文標題與章節變粗體
     AutoFakeSlant = 0.2
   ]
-  \setCJKsansfont{cwTeX Q Kai Medium.ttf}[
+  \setCJKsansfont{edukai-5.1_20251208.ttf}[
     Path         = ./,
     Script       = Default,
-    BoldFont     = cwTeX Q Kai Medium.ttf,
-    AutoFakeBold = 2
+    BoldFont     = edukai-5.1_20251208.ttf,
+    AutoFakeBold = 2.5
   ]
-  \setCJKmonofont{cwTeX Q Kai Medium.ttf}[
+  \setCJKmonofont{edukai-5.1_20251208.ttf}[
     Path         = ./,
     Script       = Default,
-    BoldFont     = cwTeX Q Kai Medium.ttf,
-    AutoFakeBold = 2
+    BoldFont     = edukai-5.1_20251208.ttf,
+    AutoFakeBold = 2.5
   ]
-}{\IfFileExists{fonts/NotoSansTC-Bold.ttf}{%
-  \setCJKmainfont{NotoSerifTC-Regular}[
-    Path          = fonts/,
-    Extension     = .ttf,
-    UprightFont   = *,
-    BoldFont      = NotoSerifTC-Bold,
-    ItalicFont    = *,
-    AutoFakeSlant = 0.2
-  ]
-  \setCJKsansfont{NotoSansTC-ExtraLight}[
-    Path        = fonts/,
-    Extension   = .ttf,
-    UprightFont = *,
-    BoldFont    = NotoSansTC-Bold
-  ]
-  \setCJKmonofont{NotoSansTC-ExtraLight}[
-    Path        = fonts/,
-    Extension   = .ttf,
-    UprightFont = *,
-    BoldFont    = NotoSansTC-Bold
-  ]
-}{%
-  \setCJKmainfont{Noto Serif CJK TC}[
-    BoldFont      = Noto Serif CJK TC Bold,
-    ItalicFont    = Noto Serif CJK TC,
-    AutoFakeSlant = 0.2
-  ]
-  \setCJKsansfont{Noto Sans CJK TC}[
-    BoldFont = Noto Sans CJK TC Bold
-  ]
-  \setCJKmonofont{Noto Sans Mono CJK TC}[
-    BoldFont = Noto Sans Mono CJK TC Bold
-  ]
-}}
+}{% 2. 如果沒有教育部楷書，才依序往後找原本樣板自帶的 cwTeX 或 Noto 字體
+  \IfFileExists{cwTeX Q Kai Medium.ttf}{%
+    \setCJKmainfont{cwTeX Q Kai Medium.ttf}[
+      Path          = ./,
+      Script        = Default,
+      BoldFont      = cwTeX Q Kai Medium.ttf,
+      ItalicFont    = cwTeX Q Kai Medium.ttf,
+      AutoFakeBold  = 2,
+      AutoFakeSlant = 0.2
+    ]
+    \setCJKsansfont{cwTeX Q Kai Medium.ttf}[
+      Path         = ./,
+      Script       = Default,
+      BoldFont     = cwTeX Q Kai Medium.ttf,
+      AutoFakeBold = 2
+    ]
+    \setCJKmonofont{cwTeX Q Kai Medium.ttf}[
+      Path         = ./,
+      Script       = Default,
+      BoldFont     = cwTeX Q Kai Medium.ttf,
+      AutoFakeBold = 2
+    ]
+  }{\IfFileExists{fonts/NotoSansTC-Bold.ttf}{%
+      \setCJKmainfont{NotoSerifTC-Regular}[
+        Path          = fonts/,
+        Extension     = .ttf,
+        UprightFont   = *,
+        BoldFont      = NotoSerifTC-Bold,
+        ItalicFont    = *,
+        AutoFakeSlant = 0.2
+      ]
+      \setCJKsansfont{NotoSansTC-ExtraLight}[
+        Path        = fonts/,
+        Extension   = .ttf,
+        UprightFont = *,
+        BoldFont    = NotoSansTC-Bold
+      ]
+      \setCJKmonofont{NotoSansTC-ExtraLight}[
+        Path        = fonts/,
+        Extension   = .ttf,
+        UprightFont = *,
+        BoldFont    = NotoSansTC-Bold
+      ]
+    }{%
+      \setCJKmainfont{Noto Serif CJK TC}[
+        BoldFont      = Noto Serif CJK TC Bold,
+        ItalicFont    = Noto Serif CJK TC,
+        AutoFakeSlant = 0.2
+      ]
+      \setCJKsansfont{Noto Sans CJK TC}[
+        BoldFont = Noto Sans CJK TC Bold
+      ]
+      \setCJKmonofont{Noto Sans Mono CJK TC}[
+        BoldFont = Noto Sans Mono CJK TC Bold
+      ]
+  }}
+}
 
+% 3. 英文與數字主字體設定
+\setmainfont{times.ttf}[
+    AutoFakeBold = true,
+    AutoFakeSlant = true
+]
+% ====================================================================
+
+%\setCJKmainfont{edukai-5.1_20251208.ttf}
 %% ----------------------------------------------------------------
-%% Document-level defaults (deferred so \NTOUSetup can override first)
+%% Document-level defaults
 %% ----------------------------------------------------------------
 \AtBeginDocument{%
   \setmainfont{\ntoumainfont}%
@@ -108,7 +145,7 @@
 }
 
 %% ----------------------------------------------------------------
-%% Page style: centred footer page number, no header rule
+%% Page style
 %% ----------------------------------------------------------------
 \pagestyle{fancy}
 \fancyhf{}
@@ -126,28 +163,32 @@
 }
 
 %% ----------------------------------------------------------------
+%% 底層計數器設定（讓正文與目錄連動呈現「一、二、三」）
+%% ----------------------------------------------------------------
+\renewcommand{\thechapter}{\zhnum{chapter}}
+\renewcommand{\thesection}{\zhnum{section}}
+\renewcommand{\thesubsection}{\arabic{chapter}.\arabic{section}.\arabic{subsection}}
+
+%% ----------------------------------------------------------------
 %% Heading formats (規範字級：chapter 16pt, section/subsection 14pt)
 %% ----------------------------------------------------------------
-%\titleformat{\chapter}[display]
-%  {\centering\bfseries\fontsize{16pt}{16pt}\selectfont}
-%  {第\zhnum{chapter}章}{1em}{}
-%\titlespacing*{\chapter}{0pt}{0pt}{12pt}
 \titleformat{\chapter}[block]
-  {\centering\bfseries\fontsize{16pt}{16pt}\selectfont}
-  {第\zhnum{chapter}章}{1em}{}
-  
-\titleformat{\section}
-  {\bfseries\fontsize{14pt}{14pt}\selectfont}
-  {第\zhnum{section}節}{1em}{}
+{\centering\bfseries\fontsize{16pt}{16pt}\selectfont}
+{第{\thechapter}章}{1em}{}
+\titlespacing*{\chapter}{0pt}{-1.0cm}{12pt} % 修正上方空白過大
+
+\titleformat{\section}[block]
+{\bfseries\fontsize{14pt}{14pt}\selectfont}
+{第{\thesection}節}{1em}{}
 \titlespacing*{\section}{0pt}{12pt}{6pt}
 
-\titleformat{\subsection}
-  {\bfseries\fontsize{14pt}{14pt}\selectfont}
-  {\thesubsection}{1em}{}
+\titleformat{\subsection}[block]
+{\bfseries\fontsize{14pt}{14pt}\selectfont}
+{\thesubsection}{1em}{}
 \titlespacing*{\subsection}{0pt}{12pt}{6pt}
 
 %% ----------------------------------------------------------------
-%% Front-matter centred unnumbered heading (摘要, Abstract, 目次 …)
+%% Front-matter centred unnumbered heading
 %% ----------------------------------------------------------------
 \newcommand{\ntouFrontTitle}[1]{%
   \clearpage
@@ -158,7 +199,7 @@
 \newcommand{\xfnote}[1]{\par\vspace{2pt}{\footnotesize #1\par}}
 
 %% ----------------------------------------------------------------
-%% Metadata defaults
+%% Metadata defaults & Setup
 %% ----------------------------------------------------------------
 \newcommand{\ntoumainfont}{Times New Roman}
 \newcommand{\ntouSpineYear}{2025}
@@ -179,11 +220,7 @@
 \newcommand{\ntouENDate}{June 2025}
 \newcommand{\ntouLogoFile}{Watermark_GIF.gif}
 
-%% ----------------------------------------------------------------
-%% \NTOUSetup{key=value, …} — configure all metadata in one call
-%% ----------------------------------------------------------------
 \newcommand{\NTOUSetup}[1]{\setkeys{ntou}{#1}}
-
 \define@key{ntou}{mainfont}    {\renewcommand{\ntoumainfont}{#1}}
 \define@key{ntou}{spineyear}   {\renewcommand{\ntouSpineYear}{#1}}
 \define@key{ntou}{department}  {\renewcommand{\ntouDepartment}{#1}}
@@ -203,106 +240,90 @@
 \define@key{ntou}{logofile}    {\renewcommand{\ntouLogoFile}{#1}}
 
 %% ----------------------------------------------------------------
-%% Cover page (封面)
+%% Cover & Title Pages
 %% ----------------------------------------------------------------
 \newcommand{\makeNTOUCover}{%
   \begin{titlepage}
-  \thispagestyle{empty}
-  \centering
-  {\bfseries\fontsize{24pt}{28pt}\selectfont \ntouUniversity\par}\vspace{18pt}
-  {\bfseries\fontsize{24pt}{28pt}\selectfont \ntouDepartment\par}\vspace{18pt}
-  {\bfseries\fontsize{26pt}{30pt}\selectfont \ntouDegreeZH 學位論文\par}\vspace{40pt}
-  {\fontsize{18pt}{18pt}\selectfont 指導教授：\ntouAdvisorZH\par}\vspace{40pt}
-  {\bfseries\fontsize{20pt}{26pt}\selectfont \ntouTitleZH\par}\vspace{18pt}
-  {\bfseries\fontsize{16pt}{22pt}\selectfont \ntouTitleEN\par}\vfill
-  {\fontsize{18pt}{18pt}\selectfont 研究生：\ntouStudentZH\ 撰\par}\vspace{40pt}
-  {\fontsize{18pt}{18pt}\selectfont \ntouROCDate\par}
+    \thispagestyle{empty}
+    \centering
+    {\bfseries\fontsize{36pt}{36pt}\selectfont \ntouUniversity\par}\vspace{18pt}
+    {\bfseries\fontsize{28pt}{28pt}\selectfont \ntouDepartment\par}\vspace{18pt}
+    {\bfseries\fontsize{28pt}{28pt}\selectfont \ntouDegreeZH 學位論文\par}\vspace{40pt}
+    {\fontsize{24pt}{24pt}\selectfont 指導教授：\ntouAdvisorZH\par}\vspace{40pt}
+    {\bfseries\fontsize{24pt}{24pt}\selectfont \ntouTitleZH\par}\vspace{30pt}
+    {\bfseries\fontsize{24pt}{24pt}\selectfont \ntouTitleEN\par}\vfill
+    {\fontsize{24pt}{24pt}\selectfont 研究生：\ntouStudentZH\ 撰\par}
+    {\fontsize{24pt}{24pt}\selectfont \ntouROCDate\par}
   \end{titlepage}
   \cleardoublepage
 }
 
-%% ----------------------------------------------------------------
-%% Title page (書名頁)，含浮水印 logo
-%% ----------------------------------------------------------------
 \newcommand{\makeNTOUTitlePage}{%
   \begin{titlepage}
-  \thispagestyle{empty}
-  \centering
-  {\bfseries\fontsize{16pt}{16pt}\selectfont \ntouTitleZH\par}\vspace{18pt}
-  {\bfseries\fontsize{16pt}{16pt}\selectfont \ntouTitleEN\par}\vspace{18pt}
-  \IfFileExists{\ntouLogoFile}{%
-    \begin{picture}(0,0)
-      \put(-110,-250){\includegraphics[width=.60\paperwidth]{\ntouLogoFile}}
-    \end{picture}%
-  }{}%
-  \vspace{30pt}
-  \begin{tabular}{p{.42\linewidth}p{.42\linewidth}}
-    研 究 生：\ntouStudentZH & Student：\ntouStudentEN \\
-    指導教授：\ntouAdvisorZH & Advisor：\ntouAdvisorEN
-  \end{tabular}\vspace{20pt}\par
-  {\bfseries\fontsize{14pt}{14pt}\selectfont \ntouUniversity\vspace{10pt}\par}
-  {\bfseries\fontsize{14pt}{14pt}\selectfont \ntouDepartment\vspace{10pt}\par}
-  {\bfseries\fontsize{14pt}{14pt}\selectfont \ntouDegreeZH 論 文\par}\vspace{18pt}
-  A Thesis (Dissertation)\par
-  Submitted to the \ntouDepartmentEN\par
-  \ntouCollegeEN\par
-  National Taiwan Ocean University\par
-  in partial fulfillment of the requirements\par
-  for the Degree of\par
-  \ntouDegreeEN\par
-  in\par
-  \ntouDepartmentEN\par
-  \ntouENDate\par
-  Keelung, Taiwan, Republic of China\par
-  \vfill
-  \ntouROCDate\par
+    \thispagestyle{empty}
+    \centering
+    {\bfseries\fontsize{24pt}{24pt}\selectfont \ntouTitleZH\par}\vspace{18pt}
+    {\bfseries\fontsize{24pt}{24pt}\selectfont \ntouTitleEN\par}\vspace{18pt}
+    \IfFileExists{\ntouLogoFile}{%
+      \AddToShipoutPictureBG*{%  
+        \AtPageCenter{%          
+          \makebox(0,0){\includegraphics[width=.60\paperwidth]{\ntouLogoFile}}%
+        }%
+      }%
+    }{}%
+    \begin{tabular}{p{.42\linewidth}p{.42\linewidth}}
+      研 究 生：\ntouStudentZH & Student：\ntouStudentEN \\
+      指導教授：\ntouAdvisorZH & Advisor：\ntouAdvisorEN
+    \end{tabular}\vspace{20pt}\par
+    {\bfseries\fontsize{14pt}{14pt}\selectfont \ntouUniversity}\\
+    {\bfseries\fontsize{14pt}{14pt}\selectfont \ntouDepartment}\\
+    {\bfseries\fontsize{14pt}{14pt}\selectfont \ntouDegreeZH 論 文}\\\vspace{18pt}
+    A Thesis \\
+    Submitted to the \ntouDepartmentEN\\
+    \ntouCollegeEN\\
+    National Taiwan Ocean University\\
+    in partial fulfillment of the requirements\\
+    for the Degree of\\
+    \ntouDegreeEN\\
+    in\\
+    \ntouDepartmentEN\par \vfill
+    \ntouENDate\par
+    Keelung, Taiwan, Republic of China\par
+    \vfill
+    \ntouROCDate\par
   \end{titlepage}
 }
 
-%% ----------------------------------------------------------------
-%% Examination certificate placeholder (學位考試及格證明書)
-%% ----------------------------------------------------------------
 \newcommand{\makeNTOUCertificate}{%
   \clearpage
   \thispagestyle{empty}
-
   \begin{center}
     {\bfseries\fontsize{18pt}{18pt}\selectfont 學位考試及格證明書}\vspace{20pt}\par
-
     {\bfseries\fontsize{16pt}{16pt} 國立臺灣海洋大學 \ntouDepartment}\vspace{20pt}\par
-
     {\bfseries\fontsize{16pt}{16pt} \ntouStudentZH\ 君之\ntouDegreeZH 學位論文}\vspace{20pt}\par
-
     {\bfseries\fontsize{16pt}{16pt}\selectfont 經~考~試~及~格~特~此~證~明}\vspace{20pt}\par
   \end{center}
-
   \noindent
-%  考試委員：\vspace{8pt}
-
   \begin{center}
-  \renewcommand{\arraystretch}{1.9}
-  \begin{tabular}{lp{0.42\linewidth}r}
- 考試委員：& \hrulefill & 教授 \\
-    &\hrulefill &   \\
-   & \hrulefill &   \\
-   & \hrulefill &   \\
-   & \hrulefill &   \\
-   & \hrulefill &   \\
-   & \hrulefill &   \\
-   & \hrulefill &   \\
-  \end{tabular}
+    \renewcommand{\arraystretch}{1.9}
+    \begin{tabular}{lp{0.42\linewidth}r}
+      {\bfseries\fontsize{16pt}{16pt}\selectfont 考試委員}：& \hrulefill & {\bfseries\fontsize{16pt}{16pt}\selectfont 教授} \\
+      &\hrulefill &   \\
+      & \hrulefill &   \\
+      & \hrulefill &   \\
+      & \hrulefill &   \\
+      & \hrulefill &   \\
+      & \hrulefill &   \\
+      & \hrulefill &   \\
+    \end{tabular}
   \end{center}
-
- \vfill
-
+  \vfill
   \begin{center}
-  \renewcommand{\arraystretch}{1.9}
-  \begin{tabular}{lp{0.42\linewidth}r}
-指導教授：& \hrulefill &   \\
-  \end{tabular}
+    \renewcommand{\arraystretch}{1.9}
+    \begin{tabular}{lp{0.42\linewidth}r}
+      {\bfseries\fontsize{16pt}{16pt}\selectfont 指導教授}：& \hrulefill &   \\
+    \end{tabular}
   \end{center}
-   
-
   \begin{center}
     \ntouROCDate
   \end{center}
@@ -318,35 +339,123 @@
   \clearpage\pagenumbering{arabic}\setcounter{page}{1}\pagestyle{fancy}%
 }
 
+
+% 定義海大專用致謝環境
+\newenvironment{NTOUAcknowledge}{
+  \cellarage
+%  \addcontentsline{toc}{chapter}{謝辭} % 加入目錄
+  \chapter*{謝辭} % 產生無編號標題
+}{
+  \clearpage
+}
+
+
 %% Abstract environments
-\newenvironment{NTOUAcknowldegeZH}{\ntouFrontTitle{致謝}}{\par\vspace{12pt}}
-\newenvironment{NTOUAbstractZH}{\ntouFrontTitle{摘要}}{\par\vspace{12pt}}
-\newenvironment{NTOUAbstractEN}{\ntouFrontTitle{Abstract}}{\par\vspace{12pt}}
-\newcommand{\NTOUKeywordsZH}[1]{\par\vspace{12pt}關鍵詞：#1。}
-\newcommand{\NTOUKeywordsEN}[1]{\par\vspace{12pt}Keywords: #1.}
+%% Abstract environments (已修改：加入目次功能)
+\newenvironment{NTOUAbstractZH}{
+  \clearpage
+  \addcontentsline{toc}{chapter}{摘要} % 將中文摘要加入目次
+  \ntouFrontTitle{摘要}
+}{
+  \par\vspace{12pt}
+}
+
+\newenvironment{NTOUAbstractEN}{
+  \clearpage
+  \addcontentsline{toc}{chapter}{Abstract} % 將英文摘要加入目次
+  \ntouFrontTitle{Abstract}
+}{
+  \par\vspace{12pt}
+}
+\newcommand{\NTOUKeywordsZH}[1]{\par\vspace{12pt}\noindent \textbf{關鍵字}：#1。}
+\newcommand{\NTOUKeywordsEN}[1]{\par\vspace{12pt}\noindent \textbf{Keywords}：#1。}
 
 %% ----------------------------------------------------------------
-%% TOC / LOF / LOT titles and formatting
+%% TOC / LOF / LOT titles and formatting (完美復刻圖片)
 %% ----------------------------------------------------------------
 \renewcommand{\contentsname}{目次}
 \renewcommand{\listfigurename}{圖次}
 \renewcommand{\listtablename}{表次}
+
+% 強制將目錄中所有 Chapter 的標題與頁碼都鎖定為粗體
+\renewcommand{\cftchapfont}{\bfseries}      
+\renewcommand{\cftchappagefont}{\bfseries}  
+\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}} 
+
+% 這行是關鍵！它會強行寫入 .toc 暫存檔，確保前面的摘要頁碼也是粗體
+\addtocontents{toc}{\protect\renewcommand{\protect\cftchappagefont}{\protect\bfseries}}
+\addtocontents{toc}{\protect\renewcommand{\protect\cftchapfont}{\protect\bfseries}}
+
+% ================================================================
+% 已修改：讓「圖次」與「表次」呼叫時自動寫入目次
+% ================================================================
+\let\oldlistoffigures\listoffigures
+\renewcommand{\listoffigures}{
+  \clearpage
+  \addcontentsline{toc}{chapter}{\listfigurename} % 將「圖次」加入目次
+  \oldlistoffigures
+}
+
+\let\oldlistoftables\listoftables
+\renewcommand{\listoftables}{
+  \clearpage
+  \addcontentsline{toc}{chapter}{\listtablename}  % 將「表次」加入目次
+  \oldlistoftables
+}
+% ================================================================
+
+% ================================================================
+% 限制目錄只顯示到第二層（章、節），隱藏小節
+\setcounter{tocdepth}{1} 
+% ================================================================
+
 \renewcommand{\cfttoctitlefont}{\hfill\bfseries\fontsize{14pt}{14pt}\selectfont}
-\renewcommand{\cftaftertoctitle}{\hfill\vspace{12pt}}
+\renewcommand{\cftaftertoctitle}{\hfill\vspace{-12pt}}
 \renewcommand{\cftloftitlefont}{\hfill\bfseries\fontsize{14pt}{14pt}\selectfont}
-\renewcommand{\cftafterloftitle}{\hfill\vspace{12pt}}
+\renewcommand{\cftafterloftitle}{\hfill\vspace{-12pt}}
 \renewcommand{\cftlottitlefont}{\hfill\bfseries\fontsize{14pt}{14pt}\selectfont}
-\renewcommand{\cftafterlottitle}{\hfill\vspace{12pt}}
+\renewcommand{\cftafterlottitle}{\hfill\vspace{-12pt}}
+
+% ---- 1. 「章」的格式調校 ----
+\renewcommand{\cftchapfont}{\normalfont}             % 移除章的粗體，與圖片中的節字體一致
+\renewcommand{\cftchappagefont}{\normalfont}         % 移除章頁碼的粗體
+\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}} % 強制開啟「章」的導引點點點
+
+\renewcommand{\cftchappresnum}{第}                   
+\renewcommand{\cftchapaftersnum}{章~~}               
+\setlength{\cftchapindent}{0em}                      
+\setlength{\cftchapnumwidth}{3.5em}                  % 給予足夠寬度防止塞車
+
+% ---- 2. 「節」的格式調校 ----
+\renewcommand{\cftsecfont}{\normalfont}              
+\renewcommand{\cftsecpagefont}{\normalfont}          
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}} 
+
+\renewcommand{\cftsecpresnum}{第}                    
+\renewcommand{\cftsecaftersnum}{節~~}                
+\setlength{\cftsecindent}{2.5em}                     % 向右縮排產生階層感
+\setlength{\cftsecnumwidth}{3.5em}                   
+
+% ---- 圖次 (LOF) 與 表次 (LOT) 格式設定 ----
+\renewcommand{\cftfigpresnum}{圖~}         
+\renewcommand{\cfttabpresnum}{表~}         
+\renewcommand{\cftfigaftersnum}{~~}       
+\renewcommand{\cfttabaftersnum}{~~}       
+\setlength{\cftfignumwidth}{4.0em}         
+\setlength{\cfttabnumwidth}{4.0em}
 
 %% ----------------------------------------------------------------
-%% Captions: continuous numbering (not reset per chapter)
+%% 圖表編號與標題格式設定 (鎖定為 阿拉伯數字)
 %% ----------------------------------------------------------------
-\DeclareCaptionLabelSeparator{ntoucolon}{：}
+\DeclareCaptionLabelSeparator{ntoucolon}{\;}
 \captionsetup{font=normalsize,labelfont=normalfont,labelsep=ntoucolon,justification=centering}
-\renewcommand{\thefigure}{\arabic{figure}}
-\renewcommand{\thetable}{\arabic{table}}
-\counterwithout{figure}{chapter}
-\counterwithout{table}{chapter}
+
+% 鎖定圖表編號為阿拉伯數字 (如：圖 1-1, 表 1-1)
+\counterwithin{figure}{chapter}
+\renewcommand{\thefigure}{\arabic{chapter}-\arabic{figure}}
+\counterwithin{table}{chapter}
+\renewcommand{\thetable}{\arabic{chapter}-\arabic{table}}
+
 \renewcommand{\figurename}{圖}
 \renewcommand{\tablename}{表}
 
@@ -354,11 +463,13 @@
 %% Back matter helpers
 %% ----------------------------------------------------------------
 \newcommand{\NTOUReferences}{%
-  \clearpage\chapter*{參考文獻}%
+  \clearpage
+  \chapter*{參考文獻}%
   \addcontentsline{toc}{chapter}{參考文獻}%
 }
 \newcommand{\NTOUAppendix}{%
-  \clearpage\appendix\chapter*{附錄}%
+  \clearpage\appendix
+  \chapter*{附錄}%
   \addcontentsline{toc}{chapter}{附錄}%
 }
 
